@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Foodtruck.Web": {
+    "FoodTruck.Web": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -30,6 +30,7 @@
               }
             ],
             "styles": [
+              "node_modules/leaflet/dist/leaflet.css",
               "src/styles.scss"
             ]
           },
@@ -61,10 +62,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Foodtruck.Web:build:production"
+              "buildTarget": "FoodTruck.Web:build:production"
             },
             "development": {
-              "buildTarget": "Foodtruck.Web:build:development"
+              "buildTarget": "FoodTruck.Web:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -88,11 +89,15 @@
               }
             ],
             "styles": [
+              "node_modules/leaflet/dist/leaflet.css",
               "src/styles.scss"
             ]
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
