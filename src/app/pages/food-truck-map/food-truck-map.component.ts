@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, signal, inject, viewChild, viewChildren } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FoodTruckService } from '../../services/food-truck.service';
 import { FoodTruck } from '../../models/food-truck.model';
-import * as L from 'leaflet';
+import { GoogleMap, MapAdvancedMarker, MapInfoWindow } from '@angular/google-maps';
 
 @Component({
   selector: 'app-food-truck-map',
@@ -9,89 +10,34 @@ import * as L from 'leaflet';
   templateUrl: './food-truck-map.component.html',
   styleUrl: './food-truck-map.component.scss'
 })
-// export class FoodTruckMapComponent implements OnInit {
-//   foodTrucks: FoodTruck[] = [];
-//   loading = true;
-//   error: string | null = null;
 
-//   constructor(private foodTruckService: FoodTruckService) {}
+export class FoodTruckMapComponent {
+  infoWindow = viewChild.required(MapInfoWindow);
+  markersRef = viewChildren(MapAdvancedMarker);
+  
+  private foodTruckService = inject(FoodTruckService);
 
-//   ngOnInit(): void {
-//     this.foodTruckService.getFoodTrucks().subscribe({
-//       next: data => {
-//         this.foodTrucks = data;
-//         this.loading = false;
-//       },
-//       error: err => {
-//         this.error = 'Failed to load food trucks';
-//         this.loading = false;
-//         console.error(err);
-//       }
-//     });
-//   }
-// }
-export class FoodTruckMapComponent implements OnInit {
-    map!: L.Map;
-  lat: number = 37.7749;
-  lng: number = -122.4194;
-  foodTrucks: FoodTruck[] = [];
+  center = signal<google.maps.LatLngLiteral>({lat: 37.7749, lng: -122.4194});
+  zoom = signal(10);
 
-  constructor(private foodTruckService: FoodTruckService) {}
+  foodTrucks$ = this.foodTruckService.getNearbyFoodTrucks(this.center());
 
-  fetchFoodTrucks(): void {
-    this.foodTruckService.getNearbyFoodTrucks(this.lat, this.lng).subscribe({
-      next: (data) => this.foodTrucks = data,
-      error: (err) => console.error('Error fetching food trucks', err)
-    });
+  $foodTrucks = toSignal(this.foodTrucks$, {
+    initialValue: [],
+  });
+
+  oenInfoWindow(foodtruck: FoodTruck, marker: MapAdvancedMarker){
+    const content = `
+      <h1 class="font-bold text-kl">${foodtruck.applicant}</h1>
+      <p>${foodtruck.locationDescription}</p>
+    `;
+    this.infoWindow().open(marker, false, content);
   }
 
-   ngOnInit(): void {
-    //this.initMap();
-    this.fetchFoodTrucks();
+  goToPoint(foodTruck: FoodTruck, position: number){
+    const markers = this.markersRef();
+    const markerRef = markers[position];
+
+    this.oenInfoWindow(foodTruck, markerRef);
   }
-
-//   ngAfterViewInit(): void {
-//   this.map = L.map('map').setView([this.lat, this.lng], 13);
-
-//   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//     maxZoom: 18,
-//     attribution: '© OpenStreetMap'
-//   }).addTo(this.map);
-// }
-
-  initMap(): void {
-    this.map = L.map('map').setView([this.lat, this.lng], 14);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(this.map);
-  }
-
-  // fetchFoodTrucks(): void {
-  //   this.foodTruckService.getNearbyFoodTrucks(this.lat, this.lng).subscribe({
-  //     next: (data) => {
-  //       this.foodTrucks = data;
-
-  //       // Limpiar marcadores anteriores si se recarga
-  //       this.map.eachLayer((layer) => {
-  //         if ((layer as any)._icon) this.map.removeLayer(layer);
-  //       });
-
-  //       // Volver a agregar capa base
-  //       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
-
-  //       data.forEach(truck => {
-  //         const lat = parseFloat(truck.latitude as any);
-  //         const lng = parseFloat(truck.longitude as any);
-          
-  //         if (!isNaN(lat) && !isNaN(lng)) {
-  //           L.marker([lat, lng])
-  //             .addTo(this.map)
-  //             .bindPopup(`<strong>${truck.applicant}</strong><br>${truck['location']}`);
-  //         }
-  //       });
-  //     },
-  //     error: (err) => console.error('Error fetching food trucks', err)
-  //   });
-  // }
 }

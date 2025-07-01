@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FoodTruck } from '../models/food-truck.model';
+import {GoogleMap} from '@angular/google-maps';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,8 @@ export class FoodTruckService {
     return this.http.get<FoodTruck[]>(this.apiUrl);
   }
 
-    getNearbyFoodTrucks(lat: number, lng: number): Observable<FoodTruck[]> {
-    const url = `${this.apiUrl}?lat=${lat}&lng=${lng}`;
+    getNearbyFoodTrucks(point: google.maps.LatLngLiteral): Observable<FoodTruck[]> {
+    const url = `${this.apiUrl}?lat=${point.lat}&lng=${point.lng}`;
     return this.http.get<FoodTruck[]>(url);
   }
 }

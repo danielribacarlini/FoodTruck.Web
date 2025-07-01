@@ -1,11 +1,11 @@
 <div class="flex space-x-4 h-[40rem]">
   <div class="h-full">
-    <!--
+    
       <input type="range" name="zoom" min="0" max="20" class="w-full" [(ngModel)]="zoom" />
-    -->
+    
     <div class="divide-y h-full overflow-auto pr-4">
-      @for(foodTruck of foodTrucks; track foodTruck) {
-        <div class="max-w-md text-gray-900" aria-hidden="true">
+      @for(foodTruck of $foodTrucks(); track foodTruck) {
+        <div class="max-w-md text-gray-900" aria-hidden="true" (click)="goToPoint(foodTruck, $index)">
           <div class="flex flex-col pb-3">
               <dt class="mb-1 text-gray-500 md:text-lg 0">{{ foodTruck.applicant }}</dt>
               <dd class="text-lg font-semibold">{{ foodTruck.locationDescription }}</dd>
@@ -17,6 +17,20 @@
 
   <div class="w-4/5">
     <div class="w-full h-full">
+      <google-map
+        mapId="2041185aa1c8d7482e5290c2"
+        height="100%"
+        width="100%"
+        [center]="center()"
+        [zoom]="zoom()">
+         @for (foodTruck of $foodTrucks(); track foodTruck) {
+          <map-advanced-marker 
+            #marker="mapAdvancedMarker"
+            (mapClick)="oenInfoWindow(foodTruck, marker)"
+            [position]="{lat: +foodTruck.latitude, lng: +foodTruck.longitude}" />
+        }
+        <map-info-window />
+      </google-map>
     </div>
 
   </div>

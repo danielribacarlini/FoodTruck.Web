@@ -9,6 +9,7 @@ import { FoodTruckMapComponent } from './pages/food-truck-map/food-truck-map.com
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from './shared/header/header.component';
 import { LayoutComponent } from './shared/layout/layout.component';
+import { GoogleMap, MapAdvancedMarker, MapInfoWindow } from '@angular/google-maps';
 
 
 
@@ -23,9 +24,17 @@ import { LayoutComponent } from './shared/layout/layout.component';
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    GoogleMap,
+    MapAdvancedMarker,
+    MapInfoWindow,
     RouterModule.forRoot([
-      { path: '', component: FoodTruckMapComponent },
-      { path: '**', redirectTo: '' }
+      {    
+        path: '',
+        component: LayoutComponent,
+        children: [     
+          { path: 'foodtrucks', component: FoodTruckMapComponent },
+          { path: '**', redirectTo: '' }]
+      }
     ])
   ],
   bootstrap: [AppComponent]
