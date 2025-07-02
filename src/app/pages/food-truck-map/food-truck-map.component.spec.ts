@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FoodTruckMap } from './food-truck-map';
+import { FoodTruckMapComponent } from './food-truck-map.component';
 
 describe('FoodTruckMap', () => {
-  let component: FoodTruckMap;
-  let fixture: ComponentFixture<FoodTruckMap>;
+  let component: FoodTruckMapComponent;
+  let fixture: ComponentFixture<FoodTruckMapComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [FoodTruckMap]
+      declarations: [FoodTruckMapComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(FoodTruckMap);
+    fixture = TestBed.createComponent(FoodTruckMapComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

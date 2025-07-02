@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from './shared/header/header.component';
 import { LayoutComponent } from './shared/layout/layout.component';
 import { GoogleMap, MapAdvancedMarker, MapInfoWindow } from '@angular/google-maps';
-
+import { FoodTruckInfoWindowComponent } from './pages/food-truck-info-window/food-truck-info-window.component';
 
 
 @NgModule({
@@ -27,6 +27,7 @@ import { GoogleMap, MapAdvancedMarker, MapInfoWindow } from '@angular/google-map
     GoogleMap,
     MapAdvancedMarker,
     MapInfoWindow,
+    FoodTruckInfoWindowComponent,
     RouterModule.forRoot([
       {    
         path: '',
